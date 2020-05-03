@@ -3,8 +3,8 @@
  * The heap is built on an arraylist and utililzes Java generics.
  * 
  * @author Asher Muse
- * @version 1.3
- * @since 2020-05-02
+ * @version 1.4
+ * @since 2020-05-03
  */
 
 import java.io.IOException;
@@ -200,27 +200,55 @@ public class Heap<T extends Comparable<T>> {
 	}
 	
 	/**
+	 * isEmpty checks if the heap is empty.
+	 * @return boolean if the heap is empty.
+	 */
+	public boolean isEmpty() {
+		return heap.isEmpty();
+	}
+	
+	/**
+	 * findMax peeks at the maximum value in the heap.
+	 * @return T This is the maximum value of the heap.
+	 * @throws IOException Error when heap is empty.
+	 */
+	public T findMax() throws IOException {
+		if(isEmpty()) {
+			throw new IOException("Error in peek: the heap is empty");
+		}
+		return heap.get(0);
+	}
+	
+	/**
+	 * deleteMax() remove the maximum value from the heap.
+	 * @throws IOException Error when heap is empty.
+	 */
+	public void deleteMax() throws IOException {
+		if(isEmpty()) {
+			throw new IOException("Error in deletion: the heap is empty");
+		}
+		heap.remove(0);
+		maxHeapify(0);
+	}
+	
+	/**
 	 * extractMax deletes the maximum value of the heap and returns it.
-	 * @return int This is the maximum value in the heap.
+	 * @return T This is the maximum value in the heap.
 	 * @throws IOException Error when heap is empty.
 	 */
 	public T extractMax() throws IOException {
-		if(heap.isEmpty()) {
-			throw new IOException("Error in removal: the heap is empty.");
-		}
-		T max = heap.get(0);
-		heap.remove(0);
-		maxHeapify(0);
+		T max = findMax();
+		deleteMax();
 		return max;
 	}
 	
 	/**
 	 * extractMin deletes the minimum value of the heap and returns it.
-	 * @return int This is the minimum value in the heap.
+	 * @return T This is the minimum value in the heap.
 	 * @throws IOException Error when heap is empty.
 	 */
 	public T extractMin() throws IOException {
-		if(heap.isEmpty()) {
+		if(isEmpty()) {
 			throw new IOException("Error in removal: the heap is empty.");
 		}
 		int minIndex = heap.size()/2;
@@ -235,7 +263,7 @@ public class Heap<T extends Comparable<T>> {
 		buildMaxHeap();
 		return min;
 	}
-	
+		
 	/**
 	 * increaseNodeValue increases the value of a node at a given index.
 	 * @param index This is the index of the node to be changed.
