@@ -1,9 +1,20 @@
+/**
+ * ArraySorting.java explores 3 different sorting algorithms: quick, merge, and heap.
+ * 
+ * @author Asher Muse
+ * @version 1.2
+ * @since 2020-05-02
+ */
+
 import java.util.Random;
 import java.util.Scanner;
 
 public class ArraySorting {
 	private int array[];
 	
+	/**
+	 * ArraySorting() is the default constructor and builds a random array of size 10.
+	 */
 	public ArraySorting() {
 		Random rand = new Random(); 
 		this.array = new int[10];
@@ -12,16 +23,21 @@ public class ArraySorting {
 		}
 	}
 	
+	/**
+	 * ArraySorting(size) is a constructor that builds a random array of a given size.
+	 * @param size This is the given size for the array.
+	 */
 	public ArraySorting(int size) {
 		Random rand = new Random(); 
 		this.array = new int[size];
 		for(int i = 0; i < size; i++) {
-			this.array[i] = rand.nextInt(10000000);
+			this.array[i] = rand.nextInt(1000000000);
 		}
 	}
 	
-	/* 
-	 * Returns true if the array is sorted.
+	/**
+	 * isSorted checks to see if the array is properly sorted.
+	 * @return boolean if the array is sorted
 	 */
 	public boolean isSorted() {
 		for(int i = 1; i < array.length; i++) {
@@ -32,8 +48,12 @@ public class ArraySorting {
 		return true;
 	}
 	
-	/*
-	 * Creates two arrays using low, mid, and high and merges them into a sorted array.
+	/**
+	 * merge takes a low, mid, and high point and uses them to separate an array into two smaller arrays.
+	 * These smaller arrays are then merged such that the final array is sorted. This is a helper for mergeSort.
+	 * @param low This is the low index of the left array.
+	 * @param mid This is the high index of the left array and low index for the right array.
+	 * @param high This is the high index of the right array.
 	 */
 	private void merge(int low, int mid, int high) {
 		
@@ -71,8 +91,10 @@ public class ArraySorting {
 		}
 	}
 	
-	/*
-	 * Sorts an array using mergeSort algorithm.
+	/**
+	 * mergeSort uses recursion and the merge method to sort an array.
+	 * @param low This is the first index of the array partition to sort.
+	 * @param high This is the right index of the array partition to sort.
 	 */
 	public void mergeSort(int low, int high) {
 		if (low < high) {
@@ -83,8 +105,10 @@ public class ArraySorting {
 		}		
 	}
 	
-	/*
-	 * Swaps values in an array when given their indices.
+	/**
+	 * swap swaps the value of two indices in an array.
+	 * @param x This is the first index to swap.
+	 * @param y This is the second index to swap.
 	 */
 	private void swap(int x, int y) {
 		int temp = this.array[x];
@@ -92,8 +116,11 @@ public class ArraySorting {
 		this.array[y] = temp;
 	}
 	
-	/*
-	 * Helper function for quickSort algorithm.
+	/**
+	 * partition is a helper method for quickSort.
+	 * @param start This is the first element of the array.
+	 * @param end This is the last element of the array.
+	 * @return int This is the pivot point in quickSort.
 	 */
 	private int partition(int start, int end) {
 		int x = this.array[end];
@@ -108,8 +135,10 @@ public class ArraySorting {
 		return i + 1;
 	}
 	
-	/*
-	 * Sorts an array using quickSort algorithm.
+	/**
+	 * quickSort uses recursion to sort an array.
+	 * @param start This is the first element of the array to be acted on.
+	 * @param end This is the last element of the array to be acted on.
 	 */
 	public void quickSort(int start, int end) {
 		if (start < end) {
@@ -119,25 +148,71 @@ public class ArraySorting {
 		}
 	}
 	
-	/*
-	 * Prints the elements of an array. If the array is very 
-	 * large (n > 100), only the first 100 elements are printed.
+	/**
+	 * maxHeapify is given an index of a node and converts that node and underlying nodes into a heap.
+	 * @param parent This is the top node to "heapify".
+	 */
+	private void maxHeapify(int parent, int size) {
+		int left = parent * 2 + 1;
+		int right = left + 1;
+		int max = parent;
+		
+		if(left < size && this.array[left] > this.array[max]) {
+			max = left;
+		}
+		if(right < size && this.array[right] > this.array[max]) {
+			max = right;
+		}
+		if (max != parent) {
+			swap(max, parent);
+			maxHeapify(max, size);
+		}
+	}
+	
+	/**
+	 * buildMaxHeap takes the underlying array and sorts it such that it is a heap.
+	 */
+	public void buildMaxHeap() {
+		for(int i = (array.length / 2 - 1); i >= 0; i--) {
+			maxHeapify(i, array.length);
+		}
+	}
+	
+	/**
+	 * heapSort takes an array and sorts it by turning it into a max heap.
+	 */
+	public void heapSort() {
+		buildMaxHeap();
+		for(int i = this.array.length-1; i > 0; i--) {
+			swap(i, 0);
+			maxHeapify(0, i);			
+		}
+	}
+	
+	/**
+	 * min compares to integers and returns the smaller of the two.
+	 * @param a This is an integer to be compared.
+	 * @param b This is an integer to be compared.
+	 * @return int The smaller of a and b.
+	 */
+	private int min(int a, int b) {
+		if (a < b) {
+			return a;
+		}
+		return b;
+	}
+	
+	/**
+	 * printArray prints the elements of the underlying array.
 	 */
 	public void printArray() {
-		if(this.array.length <= 100) {
-			System.out.println("Printing array: ");
-			for (int i = 0; i < this.array.length; i++) {
-				System.out.print(this.array[i] + " ");
-			}
-		}
-		else {
-			System.out.println("Array is very large. Printing first 100 elements.");
-			for (int i = 0; i < 100; i++) {
-				System.out.print(this.array[i] + " ");
-			}
+		System.out.println("Printing underlying array (up to 100 elements): ");
+		for (int i = 0; i < min(100,array.length); i++) {
+			System.out.print(array[i] + " ");
 		}
 		System.out.println("");
 	}
+	
 	
 	public static void main(String args[]) {
 		Scanner scan = new Scanner(System.in);
@@ -150,7 +225,7 @@ public class ArraySorting {
 		int userInput = scan.nextInt();
 		ArraySorting userArray = new ArraySorting(userInput);
 		
-		String commands = "[0] Quit\n[1] print\n[2] mergeSort\n[3] quickSort\n[4] rerandomizeArray\n[5] resizeArray\n[6] isSorted\n[7] Test sorting algorithms.";
+		String commands = "[0] Quit\n[1] print\n[2] mergeSort\n[3] quickSort\n[4] rerandomizeArray\n[5] resizeArray\n[6] isSorted\n[7] heapSort\n[8] Test sorting algorithms";
 	
 		
 		// Handle UI
@@ -167,29 +242,21 @@ public class ArraySorting {
 		    	case 2: // mergeSort
 		    		startTime = System.currentTimeMillis();
 		    		System.out.println("Original array: ");
-		    		if(userArray.array.length <= 100) {
-		    			userArray.printArray();
-		    		}
+		    		userArray.printArray();
 		    		System.out.println("Sorting the array with mergeSort...");
 		    		userArray.mergeSort(0, userArray.array.length-1);
 		    		System.out.println("Sorted array: ");
-		    		if(userArray.array.length <= 100) {
-		    			userArray.printArray();
-		    		}
+		    		userArray.printArray();
 		    		System.out.println("Time elapsed (ms): " + (System.currentTimeMillis() - startTime));
 		    		break;
 		    	case 3: // quickSort
 		    		startTime = System.currentTimeMillis();
 		    		System.out.println("Original array: ");
-		    		if(userArray.array.length <= 100) {
-		    			userArray.printArray();
-		    		}
+		    		userArray.printArray();
 		    		System.out.println("Sorting the array with quickSort...");
 		    		userArray.quickSort(0, userArray.array.length-1);
 		    		System.out.println("Sorted array: ");
-		    		if(userArray.array.length <= 100) {
-		    			userArray.printArray();
-		    		}
+		    		userArray.printArray();
 		    		System.out.println("Time elapsed (ms): " + (System.currentTimeMillis() - startTime));
 		    		break;
 			    case 4: // randomizeArray
@@ -204,7 +271,7 @@ public class ArraySorting {
 			    case 6: // isSorted
 			    	System.out.println("Sorted: " + userArray.isSorted());
 			    	break;
-			    case 7:
+			    case 8: // Assignment
 			    	int i = 10;
 			    	while (i <= 10000000) {
 				    	userArray = new ArraySorting(i);
@@ -217,9 +284,25 @@ public class ArraySorting {
 				    	userArray.quickSort(0, userArray.array.length-1);
 				    	System.out.println("Quick Sort - Size: " + i + ", Time: " + (System.currentTimeMillis() - startTime));
 				    	System.out.println("Is sorted: " + userArray.isSorted());
+				    	userArray = new ArraySorting(i);
+				    	startTime = System.currentTimeMillis();
+				    	userArray.heapSort();
+				    	System.out.println("Heap Sort - Size: " + i + ", Time: " + (System.currentTimeMillis() - startTime));
+				    	System.out.println("Is sorted: " + userArray.isSorted());
 				    	i = i * 10;
 			    	}
 			    	break;
+			    case 7: // heapSort
+			    	startTime = System.currentTimeMillis();
+		    		System.out.println("Original array: ");
+		    		userArray.printArray();
+		    		System.out.println("Sorting the array with heapSort...");
+		    		userArray.heapSort();
+		    		System.out.println("Sorted array: ");
+		    		userArray.printArray();
+		    		System.out.println("Time elapsed (ms): " + (System.currentTimeMillis() - startTime));
+		    		System.out.println("Is sorted: " + userArray.isSorted());
+		    		break;
 			    } // end of switch
 		  } // end of while
 		scan.close();
