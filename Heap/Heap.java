@@ -41,8 +41,8 @@ public class Heap<T extends Comparable<T>> {
 	 * @param arr This is an arraylist that will be converted into a heap.
 	 */
 	public Heap(ArrayList<T> arr) {
-		heap.clear();
 		heap.addAll(arr);
+		buildMaxHeap();
 	}
 	
 	/**
@@ -132,6 +132,18 @@ public class Heap<T extends Comparable<T>> {
 			maxHeapify(i);
 		}
 	}
+	
+	/**
+	 * shiftNodeUp is used when a new node is added and fixes the heap with much less overhead than rebuilding the heap.
+	 * @param index This is the index of the node to be checked if it needs to move up.
+	 */
+	private void shiftNodeUp(int index) {
+		int parent = findParent(index);
+		if(index != 0 && heap.get(index).compareTo(heap.get(parent)) > 0 ) {
+			Collections.swap(heap, index, parent);
+			shiftNodeUp(parent);
+		}
+	}
 			
 	/**
 	 * addNode takes a value and adds it to the heap.
@@ -139,7 +151,7 @@ public class Heap<T extends Comparable<T>> {
 	 */
 	public void addNode(T value) {
 		heap.add(value);
-		buildMaxHeap();
+		shiftNodeUp(heap.size()-1);
 	}
 	
 	/**
