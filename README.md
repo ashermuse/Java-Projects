@@ -1,2 +1,2 @@
 # Java-Projects
-A portfolio of projects I have created in Java.
+Archive of Java Projects made when in undergrad.
